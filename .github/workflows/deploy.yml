@@ -59,11 +59,28 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Upload Application Python file into the S3 bucket
-              uses: ./.github/actions/s3cmd-docker
+            - name: Set up Python
+              uses: actions/setup-python@v5
               with:
-                command: put s3_script.py s3://${{ secrets.S3_BUCKET }}/stackable-demo/s3_script.py
-                access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                host_base: ${{ secrets.S3_ENDPOINT_URL }}
-                bucket_location: ${{ secrets.S3_BUCKET_REGION }}
+                python-version: '3.11'
+
+            - name: Cache pip packages
+              id: cache-pip
+              uses: actions/cache@v4
+              with:
+                path: ~/.cache/pip
+                key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pip-
+
+            - name: Install s3cmd
+              if: steps.cache-pip.outputs.cache-hit != 'true'
+              run: pip install s3cmd
+
+            - name: Upload s3_script.py into the S3 bucket
+              run: |
+                s3cmd --access_key=${{ secrets.AWS_ACCESS_KEY_ID }} \
+                      --secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+                      --host-bucket="%(bucket)s.${{ secrets.S3_HOST }}" \
+                      --region=${{ secrets.S3_BUCKET_REGION }} \
+                      put s3_script.py s3://${{ secrets.S3_BUCKET }}/stackable-demo/s3_script.py
