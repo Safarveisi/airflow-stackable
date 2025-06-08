@@ -1,0 +1,36 @@
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: simple-spark-job-in-s3
+  namespace: default
+spec:
+  sparkImage:
+    productVersion: 3.5.5
+  mode: cluster
+  mainApplicationFile: s3a://${S3_BUCKET}/stackable-demo/s3_script.py
+  sparkConf:
+    spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+    spark.hadoop.fs.s3a.path.style.access: "true"
+    spark.hadoop.fs.s3a.access.key: "${AWS_ACCESS_KEY_ID}"
+    spark.hadoop.fs.s3a.secret.key: "${AWS_SECRET_ACCESS_KEY}"
+    spark.hadoop.fs.s3a.endpoint: "${S3_ENDPOINT_URL}"
+    spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
+    spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+    spark.hadoop.fs.s3a.endpoint.region: "${S3_REGION}"
+  driver:
+    config:
+      resources:
+        cpu:
+          min: "1"
+          max: "2"
+        memory:
+          limit: "1Gi"
+  executor:
+    replicas: 1
+    config:
+      resources:
+        cpu:
+          min: "1"
+          max: "2"
+        memory:
+          limit: "2Gi"

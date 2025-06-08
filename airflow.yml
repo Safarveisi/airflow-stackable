@@ -1,0 +1,66 @@
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: 2.10.4
+  clusterConfig:
+    loadExamples: false
+    exposeConfig: false
+    credentialsSecret: simple-airflow-credentials
+    volumes:
+      - name: airflow-dags
+        configMap:
+          name: airflow-dags
+    volumeMounts:
+      - name: airflow-dags
+        mountPath: /dags/date_demo.py
+        subPath: date_demo.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark_demo.py
+        subPath: pyspark_demo.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark.yml
+        subPath: pyspark.yml
+  webservers:
+    config:
+      resources:
+        cpu:
+          min: 400m
+          max: "1"
+        memory:
+          limit: 3Gi
+      gracefulShutdownTimeout: 30s
+    roleGroups:
+      default:
+        envOverrides:
+          AIRFLOW__CORE__DAGS_FOLDER: "/dags"
+          AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
+        replicas: 1
+  kubernetesExecutors:
+    config:
+      resources:
+        cpu:
+          min: 400m
+          max: 800m
+        memory:
+          limit: 2Gi
+    envOverrides:
+      AIRFLOW__CORE__DAGS_FOLDER: "/dags"
+      AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
+  schedulers:
+    config:
+      gracefulShutdownTimeout: 30s
+      resources:
+        cpu:
+          min: 400m
+          max: "1"
+        memory:
+          limit: 3Gi
+    roleGroups:
+      default:
+        envOverrides:
+          AIRFLOW__CORE__DAGS_FOLDER: "/dags"
+          AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
+        replicas: 1
