@@ -1,0 +1,30 @@
+# action.yml
+name: 'S3cmd Docker Action'
+author: 'Sajad Safarveisi'
+description: 'Use s3cmd to interact with an S3-compatible service.'
+inputs:
+  command:
+    description: 'command to be executed by s3cmd (e.g., "put file.txt s3://my-bucket")'
+    required: true
+  access_key:
+    description: 'Access key id'
+    required: true
+  secret_key:
+    description: 'Secret access key'
+    required: true
+  host_base:
+    description: 'S3 service endpoint url (e.g., s3-de-central.profitbricks.com)'
+    required: true
+  bucket_location:
+    description: 'Region where your s3 bucket is located (e.g., EU)'
+    required: false
+    default: ''
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.command }}
+    - ${{ inputs.access_key }}
+    - ${{ inputs.secret_key }}
+    - ${{ inputs.host_base }}
+    - ${{ inputs.bucket_location }}

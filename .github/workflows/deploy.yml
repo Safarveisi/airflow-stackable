@@ -1,0 +1,69 @@
+name: Lint, Format, Static Code Check and Upload to S3
+
+on:
+    pull_request:
+      types: [opened, synchronize]
+    push:
+        branches:
+            - master
+
+jobs:
+
+    lint-format-and-static-code-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.11'
+
+            - name: Cache pip packages
+              id: cache-pip
+              uses: actions/cache@v4
+              with:
+                path: ~/.cache/pip
+                key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pip-
+
+            - name: Cache poetry packages
+              id: cache-pypoetry
+              uses: actions/cache@v4
+              with:
+                path: .venv
+                key: ${{ runner.os }}-pypoetry-${{ hashFiles('**/pyproject.toml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pypoetry-
+
+            - name: Install Poetry
+              run: pip install poetry
+
+            - name: Create poetry virtual env
+              if: steps.cache-pypoetry.outputs.cache-hit != 'true'
+              run: |
+                poetry config virtualenvs.in-project true
+                poetry install --only dev
+
+            - name: Linting with pre-commit
+              run: |
+                poetry run pre-commit run --all-files
+
+    upload-into-s3:
+        runs-on: ubuntu-latest
+        needs: lint-format-and-static-code-check
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Upload Application Python file into the S3 bucket
+              uses: ./.github/actions/s3cmd-docker
+              with:
+                command: put s3_script.py s3://${{ secrets.S3_BUCKET }}/stackable-demo/s3_script.py
+                access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                host_base: ${{ secrets.S3_ENDPOINT_URL }}
+                bucket_location: ${{ secrets.S3_BUCKET_REGION }}
