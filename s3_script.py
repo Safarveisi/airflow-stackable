@@ -15,6 +15,11 @@ df = spark.createDataFrame(
         ("mary", 8),
         ("tom", 20),
         ("alice", 15),
+        ("dave", 22),
+        ("eve", 30),
+        ("charlie", 5),
+        ("lucy", 18),
+        ("mike", 40),
     ],
     ["first_name", "age"],
 )
