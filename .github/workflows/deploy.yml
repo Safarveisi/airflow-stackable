@@ -29,27 +29,12 @@ jobs:
                 restore-keys: |
                   ${{ runner.os }}-pip-
 
-            - name: Cache poetry packages
-              id: cache-pypoetry
-              uses: actions/cache@v4
-              with:
-                path: .venv
-                key: ${{ runner.os }}-pypoetry-${{ hashFiles('**/pyproject.toml') }}
-                restore-keys: |
-                  ${{ runner.os }}-pypoetry-
-
-            - name: Install Poetry
-              run: pip install poetry
-
-            - name: Create poetry virtual env
-              if: steps.cache-pypoetry.outputs.cache-hit != 'true'
-              run: |
-                poetry config virtualenvs.in-project true
-                poetry install --only dev
+            - name: Install pre-commit
+              run: pip install pre-commit
 
             - name: Linting with pre-commit
               run: |
-                poetry run pre-commit run --all-files
+                pre-commit run --all-files
 
     upload-into-s3:
         runs-on: ubuntu-latest
