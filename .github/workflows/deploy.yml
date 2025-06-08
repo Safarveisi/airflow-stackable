@@ -74,7 +74,6 @@ jobs:
                   ${{ runner.os }}-pip-
 
             - name: Install s3cmd
-              if: steps.cache-pip.outputs.cache-hit != 'true'
               run: pip install s3cmd
 
             - name: Upload s3_script.py into the S3 bucket
