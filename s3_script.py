@@ -1,8 +1,22 @@
 from pyspark.sql import SparkSession  # type: ignore
-from pyspark.sql.functions import col, when  # type: ignore
+from pyspark.sql.functions import (  # type: ignore
+    array,
+    avg,
+    col,
+    concat_ws,
+    count,
+    current_date,
+    desc,
+    length,
+    lit,
+    struct,
+    when,
+)
 
+# Initialize Spark session
 spark = SparkSession.builder.appName("demo").getOrCreate()
 
+# Input data
 df = spark.createDataFrame(
     [
         ("sue", 32),
@@ -24,6 +38,7 @@ df = spark.createDataFrame(
     ["first_name", "age"],
 )
 
+# Add life stage category
 df1 = df.withColumn(
     "life_stage",
     when(col("age") < 13, "child")
@@ -31,4 +46,30 @@ df1 = df.withColumn(
     .otherwise("adult"),
 )
 
-df1.show()
+# Add more derived columns
+df2 = (
+    df1.withColumn("name_length", length(col("first_name")))
+    .withColumn("birth_year_est", lit(2025) - col("age"))
+    .withColumn("tags", array(col("life_stage"), col("age").cast("string")))
+    .withColumn("metadata", struct("birth_year_est", "name_length"))
+    .withColumn("full_id", concat_ws("_", col("first_name"), col("birth_year_est")))
+    .withColumn("ingested_on", current_date())
+)
+
+# Filter adults only and sort
+adults_df = df2.filter(col("life_stage") == "adult").orderBy(desc("age"))
+
+# Aggregation: count and avg age by life stage
+summary_df = df2.groupBy("life_stage").agg(
+    count("*").alias("count"), avg("age").alias("avg_age")
+)
+
+# Show outputs
+print("📊 Enriched DataFrame:")
+df2.show(truncate=False)
+
+print("🔍 Filtered Adults Sorted by Age:")
+adults_df.show()
+
+print("📈 Summary by Life Stage:")
+summary_df.show()
