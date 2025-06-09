@@ -3,16 +3,20 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
   hooks:
-    # Check for trailing whitespace.
     - id: trailing-whitespace
       types_or: [ text, markdown, python, pyi ]
-    # Check for end of file with newline.
     - id: end-of-file-fixer
       types_or: [ text, markdown, python, pyi ]
-    # Check for files with no executable bit.
+    - id: check-shebang-scripts-are-executable
+      name: check that scripts with shebangs are executable
+      description: ensures that (non-binary) files with a shebang are executable.
+      entry: check-shebang-scripts-are-executable
+      language: python
+      types: [text]
+      stages: [pre-commit, pre-push, manual]
+      minimum_pre_commit_version: 3.2.0
     - id: check-executables-have-shebangs
       types_or: [ text, markdown, python, pyi ]
-    # Check for YAML syntax errors.
     - id: check-yaml
       types_or: [ yaml ]
     - id: check-added-large-files
@@ -21,6 +25,18 @@ repos:
       types_or: [ text, markdown, python, pyi ]
     - id: check-toml
       types_or: [ toml ]
+    - id: check-ast
+      name: check python ast
+      description: simply checks whether the files parse as valid python.
+      entry: check-ast
+      language: python
+      types: [python]
+    - id: detect-private-key
+      name: detect private key
+      description: detects the presence of private keys.
+      entry: detect-private-key
+      language: python
+      types: [text]
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
