@@ -26,3 +26,6 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 # S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_ENDPOINT_URL, and S3_REGION.
 ./run.sh create:airflow_dags
 ```
+
+> [!NOTE]
+> The `helpers` directory contains a Python module designed to retrieve the kubeconfig for Kubernetes clusters hosted on the IONOS Cloud. If you're using a different cloud provider, you can safely ignore this folder.
