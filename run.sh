@@ -46,10 +46,10 @@ function remove:airflow_dependencies {
 
 
 function create_airflow_dags {
-    kubectl apply -f role.yml
-    kubectl apply -f role_binding.yml
-    envsubst < dags_configmap.yml | kubectl apply -f -
-    kubectl apply -f airflow.yml
+    kubectl apply -f manifests/role.yml
+    kubectl apply -f manifests/role_binding.yml
+    envsubst < manifests/dags_configmap.yml | kubectl apply -f -
+    kubectl apply -f manifests/airflow.yml
 }
 
 function delete_airflow_dags {
@@ -61,16 +61,16 @@ function delete_airflow_dags {
     )
 
     for file in "${airflow_files[@]}"; do
-        kubectl delete -f "$file"
+        kubectl delete -f "manifests/$file"
     done
 }
 
 function create_spark_application {
-    envsubst < spark.yml | kubectl apply -f -
+    envsubst < manifests/spark.yml | kubectl apply -f -
 }
 
 function delete_spark_application {
-    kubectl delete -f spark.yml
+    kubectl delete -f manifests/spark.yml
 }
 
 function help {
