@@ -27,5 +27,8 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 ./run.sh create:airflow_dags
 ```
 
+> [!TIP]
+> You can use Terraform to easily provision a Kubernetes cluster on IONOS Cloud. If you choose this approach, refer to the `terraform` directory for the necessary configuration files and setup instructions.
+
 > [!NOTE]
 > The `helpers` directory contains a Python module designed to retrieve the kubeconfig for Kubernetes clusters hosted on the IONOS Cloud. If you're using a different cloud provider, you can safely ignore this folder.
