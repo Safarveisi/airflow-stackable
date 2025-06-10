@@ -1,5 +1,7 @@
 #!/bin/bash
 
+HOME_DIR=$(cd ~ && pwd)
+
 function remove:operator {
     stackablectl operator uninstall \
         "${@:-commons}"
@@ -66,11 +68,11 @@ function delete:airflow_dags {
 }
 
 function create:spark_application {
-    envsubst < manifests/spark.yml | kubectl apply -f -
+    envsubst < manifests/pyspark.yml | kubectl apply -f -
 }
 
 function delete:spark_application {
-    kubectl delete -f manifests/spark.yml
+    kubectl delete -f manifests/pyspark.yml
 }
 
 function help {
@@ -82,6 +84,13 @@ function help {
 function build_docker_image {
     docker build -t ciaa/spark_app:"${@:-v1.0.0}" \
         --push . > build.log 2>&1
+}
+
+function create_docker_k8s_secret {
+    # If you already ran docker login
+    kubectl create secret generic docker \
+    --from-file=.dockerconfigjson="$HOME"/.docker/config.json \
+    --type=kubernetes.io/dockerconfigjson
 }
 
 TIMEFORMAT="Task completed in %3lR"

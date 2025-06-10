@@ -212,6 +212,8 @@ data:
         custom: docker.io/ciaa/spark_app:v1.0.0
         productVersion: 3.5.5
         pullPolicy: Always
+        pullSecrets:
+            - name: docker
       mode: cluster
       mainApplicationFile: s3a://${S3_BUCKET}/stackable-demo/s3_script.py
       sparkConf:
