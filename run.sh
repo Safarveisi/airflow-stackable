@@ -79,5 +79,10 @@ function help {
     compgen -A function | cat -n
 }
 
+function build_docker_image {
+    docker build -t ciaa/spark_app:"${@:-v1.0.0}" \
+        --push . > build.log 2>&1
+}
+
 TIMEFORMAT="Task completed in %3lR"
 time ${@:-help}

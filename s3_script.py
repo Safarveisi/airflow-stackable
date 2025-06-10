@@ -15,6 +15,8 @@ from pyspark.sql.functions import (  # type: ignore
 
 # Initialize Spark session
 spark = SparkSession.builder.appName("demo").getOrCreate()
+# Enable Arrow-based columnar data transfers
+spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 
 # Input data
 df = spark.createDataFrame(
@@ -73,3 +75,7 @@ adults_df.show()
 
 print("📈 Summary by Life Stage:")
 summary_df.show()
+
+# Convert the Spark DataFrame back to a pandas DataFrame using Arrow
+result_pdf = summary_df.toPandas()
+print(result_pdf)
