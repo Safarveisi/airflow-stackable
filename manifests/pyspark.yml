@@ -9,7 +9,7 @@ spec:
     productVersion: 3.5.5
     pullPolicy: Always
     pullSecrets:
-      - name: docker
+      - name: docker # This Kubernetes docker secret should be available
   mode: cluster
   mainApplicationFile: s3a://${S3_BUCKET}/stackable-demo/s3_script.py
   sparkConf:

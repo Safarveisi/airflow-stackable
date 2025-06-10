@@ -3,27 +3,6 @@ kind: ConfigMap
 metadata:
   name: airflow-dags
 data:
-  date_demo.py: |
-    """Example DAG returning the current date"""
-    from datetime import datetime, timedelta
-
-    from airflow import DAG
-    from airflow.operators.bash import BashOperator
-
-    with DAG(
-        dag_id='date_demo',
-        schedule='*/1 * * * *',
-        start_date=datetime(2025, 6, 8),
-        catchup=False,
-        dagrun_timeout=timedelta(minutes=5),
-        tags=['example'],
-        params={},
-    ) as dag:
-
-        run_this = BashOperator(
-            task_id='run_every_minute',
-            bash_command='date',
-        )
   pyspark_demo.py: |
     """Example DAG demonstrating how to apply a Kubernetes Resource from Airflow running in-cluster"""
     from datetime import datetime, timedelta
@@ -213,7 +192,7 @@ data:
         productVersion: 3.5.5
         pullPolicy: Always
         pullSecrets:
-            - name: docker
+            - name: docker # This Kubernetes docker secret should be available
       mode: cluster
       mainApplicationFile: s3a://${S3_BUCKET}/stackable-demo/s3_script.py
       sparkConf:
