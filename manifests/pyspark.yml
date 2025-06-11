@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   sparkImage:
-    custom: docker.io/ciaa/spark_app:v1.0.0 # LATEST_IMAGE_TAG
+    custom: docker.io/ciaa/spark_app:v1.2.0 # LATEST_IMAGE_TAG
     productVersion: 3.5.5
     pullPolicy: Always
     pullSecrets:
