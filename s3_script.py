@@ -38,6 +38,8 @@ df = spark.createDataFrame(
         ("mike", 40),
         ("tom", 40),
         ("eli", 94),
+        ("tang", 33),
+        ("yolo", 85),
     ],
     ["first_name", "age"],
 )
