@@ -1,6 +1,8 @@
 #!/bin/bash
 
 HOME_DIR=$(cd ~ && pwd)
+STARTING_PATH=$(git rev-parse --show-toplevel)
+IDENTIFIER_COMMENT="# LATEST_IMAGE_TAG"
 
 function remove:operator {
     stackablectl operator uninstall \
@@ -91,6 +93,19 @@ function create_docker_k8s_secret {
     kubectl create secret generic docker \
     --from-file=.dockerconfigjson="$HOME"/.docker/config.json \
     --type=kubernetes.io/dockerconfigjson
+}
+
+function create_version_tag {
+    git describe --tags --always --first-parent --match "v[0-9]*.[0-9]*.[0-9]*"
+}
+
+function update_image_tag {
+    VERSION_TAG=$(create_version_tag)
+    # Update docker image tags in the manifest files for Spark application and airflow dags
+    find "$STARTING_PATH" -type f \( -name "*.yml" \) -exec grep -l "$IDENTIFIER_COMMENT" {} \; | while read -r file; do
+        echo "Updating: $file"
+        sed -i "s|\(\s*.*:\s*\).* \($IDENTIFIER_COMMENT\)|\1"${@:-$VERSION_TAG}" \2|" "$file";
+    done
 }
 
 TIMEFORMAT="Task completed in %3lR"
