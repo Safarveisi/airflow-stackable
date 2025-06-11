@@ -14,7 +14,7 @@ from pyspark.sql.functions import (  # type: ignore
 )
 
 # Initialize Spark session
-spark = SparkSession.builder.appName("demo").getOrCreate()
+spark = SparkSession.builder.appName("stackable-spark-demo").getOrCreate()
 # Enable Arrow-based columnar data transfers
 spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 

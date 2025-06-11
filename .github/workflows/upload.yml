@@ -81,11 +81,11 @@ jobs:
         - name: Build and push
           uses: docker/build-push-action@v6
           with:
-            call: "check"
+            call: check
             context: .
             push: true
             tags: spark_app:${{needs.generate-docker-image-tag.outputs.docker_image_tag}}
-            platforms: "linux/arm64,linux/amd64"
+            platforms: linux/arm64,linux/amd64
 
     upload-into-s3:
         runs-on: ubuntu-latest
