@@ -140,6 +140,6 @@ jobs:
           with:
             base: master
             branch: docker/new_image_tag
-            delete-branch: true
+            delete-branch: false
             token: ${{ secrets.GIT_FG_TOKEN }}
             title: "Update docker image tag to ${{ needs.generate-docker-image-tag.outputs.docker_image_tag}}"
