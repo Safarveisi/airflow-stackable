@@ -83,7 +83,7 @@ function help {
 
 function build_docker_image {
     docker build -t ciaa/spark_app:"${@:-v1.0.0}" \
-        --push . > build.log 2>&1
+        --check --push . > build.log 2>&1
 }
 
 function create_docker_k8s_secret {
