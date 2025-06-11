@@ -83,10 +83,9 @@ jobs:
           with:
             context: .
             file: ./Dockerfile
-            call: check
             push: true
             tags: ${{ secrets.DOCKERHUB_USERNAME }}/spark_app:${{needs.generate-docker-image-tag.outputs.docker_image_tag}}
-            platforms: linux/amd64
+            platforms: "linux/amd64"
 
     upload-into-s3:
         runs-on: ubuntu-latest
