@@ -26,10 +26,10 @@ spec:
     config:
       resources:
         cpu:
-          min: "1"
-          max: "2"
+          min: "500m"
+          max: "1"
         memory:
-          limit: "1Gi"
+          limit: "2Gi"
   executor:
     replicas: 1
     config:
@@ -38,4 +38,4 @@ spec:
           min: "1"
           max: "2"
         memory:
-          limit: "2Gi"
+          limit: "3Gi"
