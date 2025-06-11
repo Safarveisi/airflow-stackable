@@ -36,6 +36,8 @@ df = spark.createDataFrame(
         ("charlie", 5),
         ("lucy", 18),
         ("mike", 40),
+        ("tom", 40),
+        ("eli", 94),
     ],
     ["first_name", "age"],
 )
