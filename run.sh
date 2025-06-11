@@ -99,7 +99,7 @@ function create_version_tag {
     git describe --tags --always --first-parent --match "v[0-9]*.[0-9]*.[0-9]*"
 }
 
-function update_image_tag {
+function update_docker_image_tag {
     VERSION_TAG=$(create_version_tag)
     # Update docker image tags in the manifest files for Spark application and airflow dags
     find "$STARTING_PATH" -type f \( -name "*.yml" \) -exec grep -l "$IDENTIFIER_COMMENT" {} \; | while read -r file; do
