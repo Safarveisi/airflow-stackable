@@ -18,10 +18,10 @@ spec:
     spark.hadoop.fs.s3a.path.style.access: "true"
     spark.hadoop.fs.s3a.access.key: "${AWS_ACCESS_KEY_ID}"
     spark.hadoop.fs.s3a.secret.key: "${AWS_SECRET_ACCESS_KEY}"
-    spark.hadoop.fs.s3a.endpoint: "${S3_ENDPOINT_URL}"
+    spark.hadoop.fs.s3a.endpoint: "http://${S3_HOST}"
     spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
     spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
-    spark.hadoop.fs.s3a.endpoint.region: "${S3_REGION}"
+    spark.hadoop.fs.s3a.endpoint.region: "${S3_BUCKET_REGION}"
   driver:
     config:
       resources:
