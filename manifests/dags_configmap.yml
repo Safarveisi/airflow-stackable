@@ -189,7 +189,7 @@ data:
       namespace: default
     spec:
       sparkImage:
-        custom: docker.io/ciaa/spark_app:v1.6.0 # LATEST_IMAGE_TAG
+        custom: docker.io/ciaa/spark_app:v1.7.0 # LATEST_IMAGE_TAG
         productVersion: 3.5.5
         pullPolicy: IfNotPresent
         pullSecrets:
