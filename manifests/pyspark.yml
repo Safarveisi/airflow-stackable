@@ -8,7 +8,7 @@ spec:
   sparkImage:
     custom: docker.io/ciaa/spark_app:v1.6.0 # LATEST_IMAGE_TAG
     productVersion: 3.5.5
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     pullSecrets:
       - name: docker # This Kubernetes docker secret should be available
   mode: cluster
