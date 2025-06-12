@@ -135,15 +135,6 @@ jobs:
           run: |
             ./run.sh update_docker_image_tag ${DOCKER_IMAGE_TAG}
 
-        - name: Create Pull Request
-          uses: peter-evans/create-pull-request@v7
-          with:
-            base: master
-            branch: docker/new_image_tag
-            delete-branch: false
-            token: ${{ secrets.GIT_FG_TOKEN }}
-            title: "Update docker image tag to ${{ needs.generate-docker-image-tag.outputs.docker_image_tag}}"
-
         - name: Set up Kubectl
           run: |
             curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl
@@ -164,3 +155,12 @@ jobs:
             S3_BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
           run: |
             ./run.sh create:airflow_dags
+
+        - name: Create Pull Request
+          uses: peter-evans/create-pull-request@v7
+          with:
+            base: master
+            branch: docker/new_image_tag
+            delete-branch: false
+            token: ${{ secrets.GIT_FG_TOKEN }}
+            title: "Update docker image tag to ${{ needs.generate-docker-image-tag.outputs.docker_image_tag}}"
