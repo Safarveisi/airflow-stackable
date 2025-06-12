@@ -145,14 +145,15 @@ jobs:
             title: "Update docker image tag to ${{ needs.generate-docker-image-tag.outputs.docker_image_tag}}"
 
         - name: Set up Kubectl
-          uses: azure/setup-kubectl@v4
-          with:
-            version: 1.29.2
+          run: |
+            curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl
+            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+            kubectl version --client
 
-        - name: Set K8s context
-          uses: Azure/k8s-set-context@v4
-          with:
-            kubeconfig: ${{ secrets.KUBECONFIG }}
+        - name: Create Kubeconfig
+          run: |
+            mkdir $HOME/.kube
+            echo ${{ secrets.KUBECONFIG }} > $HOME/.kube/config
 
         - name: Reconfigure the airflow DAGs on k8s
           env:
