@@ -144,7 +144,9 @@ jobs:
 
         - name: Create Kubeconfig
           run: |
-            mkdir $HOME/.kube
+            if [ ! -d "$HOME/.kube" ]; then
+              mkdir $HOME/.kube
+            fi
             echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
         - name: Reconfigure the airflow DAGs on k8s
