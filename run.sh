@@ -108,5 +108,9 @@ function update_docker_image_tag {
     done
 }
 
+function get_project_python_version {
+    cat pyproject.toml | grep "requires-python =" | sed -E 's/requires-python = //' | tr -d '">=<'
+}
+
 TIMEFORMAT="Task completed in %3lR"
 time ${@:-help}
