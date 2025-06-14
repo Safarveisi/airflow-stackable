@@ -112,5 +112,10 @@ function get_project_python_version {
     cat pyproject.toml | grep "requires-python =" | sed -E 's/requires-python = //' | tr -d '">=<'
 }
 
+function get_latest_kubectl_release {
+    curl --silent "https://api.github.com/repos/kubernetes/kubernetes/releases" \
+    | jq '.[] | select(.prerelease==false) | .tag_name' | sort -V -r | head -n 1 | tr -d '"'
+}
+
 TIMEFORMAT="Task completed in %3lR"
 time ${@:-help}
