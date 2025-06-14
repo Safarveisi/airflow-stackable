@@ -9,16 +9,20 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 ### Usage
 
 1️⃣ Install the Airflow K8s operator by running
+
 ```bash
 ./run.sh install:commons
 ./run.sh install:airflow_dependencies
 ./run.sh install:airflow
 ```
+
 2️⃣ Install the the Spark K8s operator by running
+
 ```bash
 ./run.sh install:commons # If you have not installed them yet
 ./run.sh install:spark_k8s
 ```
+
 3️⃣ Create Airflow dags
 ```bash
 # Ensure that s3_script.py has already been uploaded to the specified S3 bucket. Refer to line 214 in manifests/dags_configmap.yml for details.
@@ -33,5 +37,5 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 > [!NOTE]
 > The `helpers` directory contains a Python module designed to retrieve the kubeconfig for Kubernetes clusters hosted on the IONOS Cloud. If you're using a different cloud provider, you can safely ignore this folder.
 
-# Continuous integration/continuous Deployment (CI/CD)
+### Continuous integration/continuous Deployment (CI/CD)
 I used GitHub Actions for CI/CD. Please see `.github/workflows/check_build_and_deploy.yml`.
