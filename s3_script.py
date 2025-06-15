@@ -82,3 +82,12 @@ summary_df.show()
 # Convert the Spark DataFrame back to a pandas DataFrame using Arrow
 result_pdf = summary_df.toPandas()
 print(result_pdf)
+
+spark.sql(
+    """
+    CREATE TABLE IF NOT EXISTS
+    hadoop_dev.db.table (full_id string, name_length int) USING iceberg;
+    """
+)
+
+df2.select("full_id", "name_length").writeTo("hadoop_dev.db.table").append()

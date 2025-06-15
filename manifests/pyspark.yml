@@ -22,6 +22,10 @@ spec:
     spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
     spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
     spark.hadoop.fs.s3a.endpoint.region: "${S3_BUCKET_REGION}"
+    spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+    spark.sql.catalog.hadoop_dev: org.apache.iceberg.spark.SparkCatalog
+    spark.sql.catalog.hadoop_dev.type: hadoop # hadoop_dev is a path-based catalog
+    spark.sql.catalog.hadoop_dev.warehouse: s3a://${S3_BUCKET}/stackable-demo/warehouse
   driver:
     config:
       resources:
