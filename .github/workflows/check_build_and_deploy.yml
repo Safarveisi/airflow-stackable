@@ -155,6 +155,7 @@ jobs:
 
         - name: Check if the docker K8s secret exists in the cluster
           id: check-for-docker-secret
+          continue-on-error: true
           run: |
             kubectl get secret ${{ env.DOCKER_PULL_SECRET_NAME }}
 
