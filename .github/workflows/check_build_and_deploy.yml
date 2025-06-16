@@ -10,6 +10,10 @@ on:
           - "s3_script.py"
           - "Dockerfile"
           - "manifests/dags_configmap.yml"
+
+env:
+    DOCKER_PULL_SECRET_NAME: docker
+
 jobs:
 
     lint-format-plus-static-code-check:
@@ -148,6 +152,20 @@ jobs:
               mkdir $HOME/.kube
             fi
             echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+        - name: Check if the docker K8s secret exists in the cluster
+          id: check-for-docker-secret
+          run: |
+            kubectl get secret ${{ env.DOCKER_PULL_SECRET_NAME }}
+
+        - name: Create docker secret on K8s
+          if: ${{ failure() && steps.check-for-docker-secret.outcome == 'failure' }}
+          run: |
+            kubectl create secret docker-registry ${{ env.DOCKER_PULL_SECRET_NAME }} \
+             --docker-server=https://index.docker.io/v1/ \
+             --docker-username=${{ secrets.DOCKERHUB_USERNAME }} \
+             --docker-password=${{ secrets.DOCKERHUB_TOKEN }} \
+             --docker-email=${{ secrets.DOCKERHUB_EMAIL }}
 
         - name: Reconfigure the airflow DAGs on k8s
           env:
