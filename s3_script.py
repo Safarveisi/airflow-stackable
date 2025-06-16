@@ -81,11 +81,30 @@ summary_df.show()
 result_pdf = summary_df.toPandas()
 print(result_pdf)
 
+# Create an iceberg table
 spark.sql(
     """
     CREATE TABLE IF NOT EXISTS
-    hadoop_dev.db.table (full_id string, name_length int) USING iceberg;
+    hadoop_dev.db.table (full_id string, name_length int)
+    USING iceberg PARTITIONED BY (name_length);
     """
 )
 
-df2.select("full_id", "name_length").writeTo("hadoop_dev.db.table").append()
+# Create a temp table
+df2.createOrReplaceTempView("names")
+
+# Insert into or update the iceberg table
+spark.sql(
+    """
+    MERGE INTO hadoop_dev.db.table t USING (SELECT full_id, name_length FROM names) n
+    ON t.full_id = n.full_id
+    WHEN MATCHED THEN UPDATE SET t.name_length = n.name_length
+    WHEN NOT MATCHED THEN INSERT *;
+    """
+)
+
+# Second option
+# df2.select("full_id", "name_length").writeTo("hadoop_dev.db.table").append()
+
+iceberg_files = spark.sql("SELECT * FROM hadoop_dev.db.table.files;")
+iceberg_files.show()
