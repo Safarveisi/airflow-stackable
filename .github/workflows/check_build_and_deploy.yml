@@ -160,7 +160,7 @@ jobs:
             kubectl get secret ${{ env.DOCKER_PULL_SECRET_NAME }}
 
         - name: Create docker secret on K8s
-          if: ${{ failure() && steps.check-for-docker-secret.outcome == 'failure' }}
+          if: steps.check-for-docker-secret.outcome == 'failure'
           run: |
             kubectl create secret docker-registry ${{ env.DOCKER_PULL_SECRET_NAME }} \
              --docker-server=https://index.docker.io/v1/ \
