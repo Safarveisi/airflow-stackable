@@ -144,6 +144,7 @@ jobs:
             LATEST_KUBECTL_VERSION=$(./run.sh get_latest_kubectl_release)
             curl -LO https://dl.k8s.io/release/$LATEST_KUBECTL_VERSION/bin/linux/amd64/kubectl
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+            # Test if the installation was successful
             kubectl version --client
 
         - name: Create Kubeconfig
