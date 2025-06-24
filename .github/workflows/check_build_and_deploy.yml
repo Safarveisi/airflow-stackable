@@ -110,16 +110,18 @@ jobs:
           with:
             github-token: ${{ secrets.GIT_FG_TOKEN }}
             script: |
-              const output = `#### Docker build and push ⚙️\`${{ steps.docker-image-build-and-push.outcome }}\`
+              const output = `#### Docker build and push ⚙️ \`${{ steps.docker-image-build-and-push.outcome }}\`
 
-              <details><summary>Show build and push</summary>
+              <details>
+              <summary>Show build and push</summary>
 
-              \`\`\`${process.env.BUILD}\`\`\`
+              \`\`\`
+              ${process.env.BUILD}
+              \`\`\`
 
               </details>
 
               *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
 
               github.rest.issues.createComment({
               issue_number: context.issue.number,
