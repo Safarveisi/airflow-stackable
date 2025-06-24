@@ -95,21 +95,21 @@ function create_docker_k8s_secret {
     --type=kubernetes.io/dockerconfigjson
 }
 
-function create_version_tag {
-    git describe --tags --always --first-parent --match "v[0-9]*.[0-9]*.[0-9]*"
+function get_project_version {
+    echo "v$(cat pyproject.toml | grep 'version =' | sed -E 's/version = //' | tr -d '"=')"
+}
+
+function get_required_python_version {
+    cat pyproject.toml | grep 'requires-python =' | sed -E 's/requires-python = //' | tr -d '">='
 }
 
 function update_docker_image_tag {
-    VERSION_TAG=$(create_version_tag)
+    VERSION_TAG=$(get_project_version)
     # Update docker image tags in the manifest files for Spark application and airflow dags
     find "$STARTING_PATH" -type f \( -name "*.yml" \) -exec grep -l "$IDENTIFIER_COMMENT" {} \; | while read -r file; do
         echo "Updating: $file"
         sed -i "s|\(\s*.*:\s*\).* \($IDENTIFIER_COMMENT\)|\1"${@:-$VERSION_TAG}" \2|" "$file";
     done
-}
-
-function get_project_python_version {
-    cat pyproject.toml | grep "requires-python =" | sed -E 's/requires-python = //' | tr -d '">=<'
 }
 
 function get_latest_kubectl_release {
