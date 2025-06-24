@@ -3,7 +3,7 @@ name: Lint, Static Check, Build, S3 Upload & DAG Reconfig
 on:
     push:
         branches:
-            - "master"
+            - master
     pull_request:
         types: [opened, synchronize]
 
@@ -14,14 +14,23 @@ jobs:
 
     lint-format-plus-static-code-check:
         runs-on: ubuntu-latest
+        outputs:
+          required_python_version: ${{ steps.minimum-python-version.outputs.required_python_version }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Get required Python version
+              id: minimum-python-version
+              run: |
+                required_python_version=$(./run.sh get_required_python_version)
+                echo "required_python_version=$required_python_version" >> $GITHUB_OUTPUT
+                echo "Required Python version: $required_python_version"
+
             - name: Set up Python
               uses: actions/setup-python@v5
               with:
-                python-version: '3.11'
+                python-version: '${{ steps.minimum-python-version.outputs.required_python_version }}'
 
             - name: Cache pip packages
               id: cache-pip
@@ -102,7 +111,7 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@v5
               with:
-                python-version: '3.11'
+                python-version: '${{ needs.lint-format-plus-static-code-check.outputs.required_python_version }}'
 
             - name: Cache pip packages
               id: cache-pip
