@@ -4,9 +4,12 @@ on:
     push:
         branches:
             - master
+        paths-ignore:
+          - '**/*.png'
     pull_request:
         types: [opened, synchronize]
-
+        paths-ignore:
+            - '**/*.png'
 env:
     DOCKER_PULL_SECRET_NAME: docker
 
