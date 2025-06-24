@@ -94,9 +94,14 @@ jobs:
           id: docker-image-build-and-push
           continue-on-error: true
           run: |
-            docker buildx build --platform linux/amd64 \
-            --tag  ${{ secrets.DOCKERHUB_USERNAME }}/spark_app:${{ needs.version-check.outputs.project_version }} \
-            --push .
+            stdout=$(docker buildx build --platform linux/amd64 \
+              --tag  ${{ secrets.DOCKERHUB_USERNAME }}/spark_app:${{ needs.version-check.outputs.project_version }} \
+              --push .)
+            echo "$stdout"
+            # Save full stdout
+            echo "stdout<<EOF" >> $GITHUB_OUTPUT
+            echo "$stdout" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
 
         - uses: actions/github-script@v7
           if: github.event_name == 'pull_request'
