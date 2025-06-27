@@ -138,7 +138,7 @@ data:
     with DAG(
             dag_id='sparkapp_dag',
             schedule="*/5 * * * *",
-            start_date=datetime(2025, 6, 8),
+            start_date=datetime(2025, 6, 27),
             catchup=False,
             dagrun_timeout=timedelta(minutes=60),
             tags=['example'],
@@ -189,7 +189,7 @@ data:
       namespace: default
     spec:
       sparkImage:
-        custom: docker.io/ciaa/spark_app:v1.18.0 # LATEST_IMAGE_TAG
+        custom: docker.io/ciaa/spark_app:v1.19.0 # LATEST_IMAGE_TAG
         productVersion: 3.5.5
         pullPolicy: IfNotPresent
         pullSecrets:
