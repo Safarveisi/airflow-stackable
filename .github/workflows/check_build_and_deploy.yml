@@ -6,10 +6,12 @@ on:
             - master
         paths-ignore:
           - '**/*.png'
+          - '**/*.md'
     pull_request:
         types: [opened, synchronize]
         paths-ignore:
             - '**/*.png'
+            - '**/*.md'
 env:
     DOCKER_PULL_SECRET_NAME: docker
 
@@ -196,28 +198,7 @@ jobs:
             fi
             echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
-        - name: Check if the docker K8s secret exists in the cluster
-          id: check-for-docker-secret
-          continue-on-error: true
-          run: |
-            kubectl get secret ${{ env.DOCKER_PULL_SECRET_NAME }}
-
-        - name: Create docker secret on K8s
-          if: steps.check-for-docker-secret.outcome == 'failure'
-          run: |
-            kubectl create secret docker-registry ${{ env.DOCKER_PULL_SECRET_NAME }} \
-             --docker-server=https://index.docker.io/v1/ \
-             --docker-username=${{ secrets.DOCKERHUB_USERNAME }} \
-             --docker-password=${{ secrets.DOCKERHUB_TOKEN }} \
-             --docker-email=${{ secrets.DOCKERHUB_EMAIL }}
-
         - name: Reconfigure the airflow DAGs on k8s
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            S3_BUCKET: ${{ secrets.S3_BUCKET }}
-            S3_HOST: ${{ secrets.S3_HOST}}
-            S3_BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
           run: |
             ./run.sh create:airflow_dags
 

@@ -55,6 +55,8 @@ repos:
   rev: v8.24.2
   hooks:
     - id: gitleaks # For secret scanning/security
+      exclude: |
+        ^manifests/(manifests/s3_sealed_secret\.yml|docker_sealed_secret\.yml)$
 
 - repo: local
   hooks:

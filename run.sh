@@ -21,6 +21,22 @@ function install:spark_k8s {
         spark-k8s=25.3.0
 }
 
+function install:sealed_secrets_controller {
+    helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+    helm repo update sealed-secrets
+    helm install sealed-secrets \
+        -n kube-system --set-string fullnameOverride=sealed-secrets-controller \
+        sealed-secrets/sealed-secrets
+}
+
+# Make sure kubeseal is installed
+function create:sealed_secrets {
+    if [[ $# -ne 2 ]]; then
+        echo "Usage: create:sealed_secrets <input-file> <output-file>"
+        return 1
+    fi
+    kubeseal --format yaml -f "$1" > "$2"
+}
 
 function install:airflow {
     stackablectl operator install \
@@ -50,18 +66,22 @@ function remove:airflow_dependencies {
 
 
 function create:airflow_dags {
-    kubectl apply -f manifests/role.yml
-    kubectl apply -f manifests/role_binding.yml
-    envsubst < manifests/dags_configmap.yml | kubectl apply -f -
-    kubectl apply -f manifests/airflow.yml
+    airflow_files=(
+        "dags_configmap.yml"
+        "s3_sealed_secret.yml"
+        "docker_sealed_secret.yml"
+    )
+
+    for file in "${airflow_files[@]}"; do
+        kubectl apply -f "manifests/$file"
+    done
 }
 
 function delete:airflow_dags {
     airflow_files=(
-    "role.yml"
-    "role_binding.yml"
-    "dags_configmap.yml"
-    "airflow.yml"
+        "dags_configmap.yml"
+        "s3_sealed_secret.yml"
+        "docker_sealed_secret.yml"
     )
 
     for file in "${airflow_files[@]}"; do
