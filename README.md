@@ -25,7 +25,7 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 
 3️⃣ Create Airflow dags
 ```bash
-# Ensure that s3_script.py has already been uploaded to the specified S3 bucket. Refer to line 214 in manifests/dags_configmap.yml for details.
+# Ensure that s3_script.py has already been uploaded to the specified S3 bucket. Refer to line 214 in application-manifests/dags_configmap.yml for details.
 # Before running the command below, make sure the following environment variables are set:
 # S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_HOST, and S3_BUCKET_REGION.
 ./run.sh create:airflow_dags

@@ -73,7 +73,7 @@ function create:airflow_dags {
     )
 
     for file in "${airflow_files[@]}"; do
-        kubectl apply -f "manifests/$file"
+        kubectl apply -f "application-manifests/$file"
     done
 }
 
@@ -85,17 +85,10 @@ function delete:airflow_dags {
     )
 
     for file in "${airflow_files[@]}"; do
-        kubectl delete -f "manifests/$file"
+        kubectl delete -f "application-manifests/$file"
     done
 }
 
-function create:spark_application {
-    envsubst < manifests/pyspark.yml | kubectl apply -f -
-}
-
-function delete:spark_application {
-    kubectl delete -f manifests/pyspark.yml
-}
 
 function help {
     echo "$0 <task> [args]"
