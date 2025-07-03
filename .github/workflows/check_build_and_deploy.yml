@@ -172,7 +172,7 @@ jobs:
                       --region=${{ secrets.S3_BUCKET_REGION }} \
                       put s3_script.py s3://${{ secrets.S3_BUCKET }}/stackable-demo/s3_script.py
 
-    reconfigure-airflow-dags-on-k8s:
+    tag-the-commit-to-master:
       runs-on: ubuntu-latest
       needs:
         - version-check
@@ -182,26 +182,6 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v4
-
-        - name: Set up Kubectl
-          run: |
-            latest_kubectl_version=$(./run.sh get_latest_kubectl_release)
-            curl -LO https://dl.k8s.io/release/$latest_kubectl_version/bin/linux/amd64/kubectl
-            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-            # Test if the installation was successful
-            kubectl version --client
-
-        - name: Create Kubeconfig
-          run: |
-            if [ ! -d "$HOME/.kube" ]; then
-              mkdir $HOME/.kube
-            fi
-            echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-        - name: Reconfigure the airflow DAGs on k8s
-          run: |
-            ./run.sh create:airflow_dags
-
         - name: Push the tag
           uses: actions/github-script@v7
           with:

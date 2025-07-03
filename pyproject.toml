@@ -1,7 +1,7 @@
 [project]
 name = "airflow-stackable"
 description = "Stackable data products"
-version = "1.20.0"
+version = "1.21.0"
 authors = [
     {name = "Sajad Safarveisi",email = "sajad.safarveisi@gmail.com"}
 ]
