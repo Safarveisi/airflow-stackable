@@ -38,4 +38,4 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 > The `helpers` directory contains a Python module designed to retrieve the kubeconfig for Kubernetes clusters hosted on the IONOS Cloud. If you're using a different cloud provider, you can safely ignore this folder.
 
 ### Continuous integration/continuous deployment (CI/CD)
-I used GitHub Actions for CI/CD. Please see `.github/workflows/check_build_and_deploy.yml`.
+I used GitHub Actions and Argo CD for CI/CD. Please see `.github/workflows/check_build_and_upload.yml` (CI pipeline) and `argocd-application.yml` (CD pipeline).
