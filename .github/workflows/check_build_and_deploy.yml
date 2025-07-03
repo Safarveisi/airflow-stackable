@@ -172,7 +172,7 @@ jobs:
                       --region=${{ secrets.S3_BUCKET_REGION }} \
                       put s3_script.py s3://${{ secrets.S3_BUCKET }}/stackable-demo/s3_script.py
 
-    reconfigure-airflow-dags-on-k8s:
+    tag-the-commit-to-master:
       runs-on: ubuntu-latest
       needs:
         - version-check
