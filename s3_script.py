@@ -1,3 +1,6 @@
+import random
+
+from faker import Faker  # type: ignore
 from pyspark.sql import SparkSession  # type: ignore
 from pyspark.sql.functions import (  # type: ignore
     array,
@@ -18,28 +21,19 @@ spark = SparkSession.builder.appName("stackable-spark-demo").getOrCreate()
 # Enable Arrow-based columnar data transfers
 spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 
-# Input data
-df = spark.createDataFrame(
-    [
-        ("sue", 32),
-        ("li", 3),
-        ("bob", 75),
-        ("heo", 13),
-        ("wo", 19),
-        ("jane", 45),
-        ("john", 12),
-        ("mary", 8),
-        ("tom", 20),
-        ("alice", 15),
-        ("dave", 22),
-        ("eve", 30),
-        ("charlie", 5),
-        ("lucy", 18),
-        ("mike", 40),
-        ("tom", 40),
-    ],
-    ["first_name", "age"],
-)
+# Faker instance
+faker = Faker()
+
+# Number of rows in the spark DataFrame
+num_rows = 16
+
+# Generate random data
+random_data = [
+    (faker.first_name().lower(), random.randint(1, 90)) for _ in range(num_rows)
+]
+
+# spark dataframe
+df = spark.createDataFrame(random_data, ["first_name", "age"])
 
 # Add life stage category
 df1 = df.withColumn(

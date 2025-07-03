@@ -14,4 +14,4 @@ RUN java -Divy.cache.dir=/tmp -Divy.home=/tmp -jar ivy-2.5.3.jar -confs compile 
 # Python dependencies
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir \
-    pandas scikit-learn
+    pandas faker
