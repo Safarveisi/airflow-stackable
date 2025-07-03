@@ -23,11 +23,10 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 ./run.sh install:spark_k8s
 ```
 
-3️⃣ Create Airflow dags
+3️⃣ Manually create Airflow DAGs (not recommended)
+
 ```bash
-# Ensure that s3_script.py has already been uploaded to the specified S3 bucket. Refer to line 214 in application-manifests/dags_configmap.yml for details.
-# Before running the command below, make sure the following environment variables are set:
-# S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_HOST, and S3_BUCKET_REGION.
+# Ensure that s3_script.py has already been uploaded to the specified S3 bucket. Refer to line 209 in application-manifests/dags_configmap.yml for details.
 ./run.sh create:airflow_dags
 ```
 
@@ -39,3 +38,11 @@ The Spark Operator deploys an instance of the Stackable SparkApplication custom 
 
 ### Continuous integration/continuous deployment (CI/CD)
 I used GitHub Actions and Argo CD for CI/CD. Please see `.github/workflows/check_build_and_upload.yml` (CI pipeline) and `argocd-application.yml` (CD pipeline).
+
+To initiate continuous deployment with Argo CD, apply the application manifest file to your Kubernetes cluster.
+
+```bash
+kubectl apply -f argocd-application.yml
+```
+
+From now on, Argo CD will synchronize the deployment with the latest commit on the master branch.
