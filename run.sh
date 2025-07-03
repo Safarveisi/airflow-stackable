@@ -67,6 +67,7 @@ function remove:airflow_dependencies {
 
 function create:airflow_dags {
     airflow_files=(
+        "airflow.yml"
         "dags_configmap.yml"
         "s3_sealed_secret.yml"
         "docker_sealed_secret.yml"
@@ -79,6 +80,7 @@ function create:airflow_dags {
 
 function delete:airflow_dags {
     airflow_files=(
+        "airflow.yml"
         "dags_configmap.yml"
         "s3_sealed_secret.yml"
         "docker_sealed_secret.yml"

@@ -15,9 +15,6 @@ spec:
           name: airflow-dags
     volumeMounts:
       - name: airflow-dags
-        mountPath: /dags/date_demo.py
-        subPath: date_demo.py
-      - name: airflow-dags
         mountPath: /dags/pyspark_demo.py
         subPath: pyspark_demo.py
       - name: airflow-dags

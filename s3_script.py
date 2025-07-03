@@ -80,7 +80,12 @@ spark.sql(
     """
     CREATE TABLE IF NOT EXISTS
     hadoop_dev.db.table (full_id string, name_length int)
-    USING iceberg PARTITIONED BY (name_length);
+    USING iceberg PARTITIONED BY (name_length)
+    TBLPROPERTIES (
+        'commit.retry.num-retries' = '10',
+        'commit.retry.min-wait-ms' = '1000',
+        'write.merge.isolation-level' = 'snapshot'
+    );
     """
 )
 

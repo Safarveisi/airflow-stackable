@@ -181,56 +181,57 @@ data:
 
         t1 >> t2
   pyspark.yml: |
+    ---
     apiVersion: spark.stackable.tech/v1alpha1
     kind: SparkApplication
     metadata:
-        name: simple-spark-job-in-s3
-        namespace: default
+      name: simple-spark-job-in-s3
+      namespace: default
     spec:
-        env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                    name: s3-credentials
-                    key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                    name: s3-credentials
-                    key: AWS_SECRET_ACCESS_KEY
-        sparkImage:
-            custom: docker.io/ciaa/spark_app:v1.20.0 # LATEST_IMAGE_TAG
-            productVersion: 3.5.5
-            pullPolicy: IfNotPresent
-            pullSecrets:
-                - name: docker # This Kubernetes docker secret should be available
-        mode: cluster
-        mainApplicationFile: s3a://customerintelligence/stackable-demo/s3_script.py
-        sparkConf:
-            spark.hadoop.fs.s3a.aws.credentials.provider: "com.amazonaws.auth.EnvironmentVariableCredentialsProvider"
-            spark.hadoop.fs.s3a.path.style.access: "true"
-            spark.hadoop.fs.s3a.endpoint: "http://s3-de-central.profitbricks.com"
-            spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
-            spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
-            spark.hadoop.fs.s3a.endpoint.region: "eu-central-1"
-            spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
-            spark.sql.catalog.hadoop_dev: org.apache.iceberg.spark.SparkCatalog
-            spark.sql.catalog.hadoop_dev.type: hadoop # hadoop_dev is a path-based catalog
-            spark.sql.catalog.hadoop_dev.warehouse: s3a://customerintelligence/stackable-demo/warehouse
-        driver:
-            config:
-                resources:
-                    cpu:
-                        min: "500m"
-                        max: "1"
-                    memory:
-                        limit: "2Gi"
-        executor:
-            replicas: 1
-            config:
-                resources:
-                    cpu:
-                        min: "1"
-                        max: "2"
-                    memory:
-                        limit: "3Gi"
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: s3-credentials
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: s3-credentials
+              key: AWS_SECRET_ACCESS_KEY
+      sparkImage:
+        custom: docker.io/ciaa/spark_app:v1.20.0 # LATEST_IMAGE_TAG
+        productVersion: 3.5.5
+        pullPolicy: IfNotPresent
+        pullSecrets:
+            - name: docker # This Kubernetes docker secret should be available
+      mode: cluster
+      mainApplicationFile: s3a://customerintelligence/stackable-demo/s3_script.py
+      sparkConf:
+        spark.hadoop.fs.s3a.aws.credentials.provider: "com.amazonaws.auth.EnvironmentVariableCredentialsProvider"
+        spark.hadoop.fs.s3a.path.style.access: "true"
+        spark.hadoop.fs.s3a.endpoint: "http://s3-de-central.profitbricks.com"
+        spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
+        spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+        spark.hadoop.fs.s3a.endpoint.region: "eu-central-1"
+        spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+        spark.sql.catalog.hadoop_dev: org.apache.iceberg.spark.SparkCatalog
+        spark.sql.catalog.hadoop_dev.type: hadoop # hadoop_dev is a path-based catalog
+        spark.sql.catalog.hadoop_dev.warehouse: s3a://customerintelligence/stackable-demo/warehouse
+      driver:
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "2"
+            memory:
+              limit: "1Gi"
+      executor:
+        replicas: 2
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "2"
+            memory:
+              limit: "2Gi"
