@@ -12,9 +12,6 @@ on:
         paths-ignore:
             - '**/*.png'
             - '**/*.md'
-env:
-    DOCKER_PULL_SECRET_NAME: docker
-
 jobs:
 
     lint-format-plus-static-code-check:
