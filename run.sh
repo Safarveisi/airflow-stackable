@@ -132,5 +132,9 @@ function get_latest_kubectl_release {
     | jq '.[] | select(.prerelease==false) | .tag_name' | sort -V -r | head -n 1 | tr -d '"'
 }
 
+function get_argocd_service_external_ip {
+    kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}' && echo
+}
+
 TIMEFORMAT="Task completed in %3lR"
 time ${@:-help}
